@@ -18,7 +18,7 @@ class LoopingFloatChannel {
     void setLoopMode(LoopingFloatChannelLoopMode mode);
 
     float currentValue;
-    int duration, queuedDuration;
+    int duration, queuedDuration; // in milliseconds
 
   private:
     float interpolateLinear (float t, float b, float c, float d);

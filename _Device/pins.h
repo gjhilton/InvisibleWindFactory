@@ -15,4 +15,12 @@
 #define MP3_RX 7
 #define MP3_TX 4
 
+// alternate headlight version - FIXME TODO
+/*
+#define LED_RED_PIN 9
+#define LED_GREEN_PIN 6
+#define LED_BLUE_PIN 5
+#define LED_WHITE_PIN 3
+*/
+
 #endif

@@ -20,7 +20,7 @@ void LoopingFloatChannel::update() {
   }
 
   // calculate elapsed time
-  unsigned long cycleDurationMillis = duration * 1000;
+  unsigned long cycleDurationMillis = duration;
   unsigned long now = millis();
   unsigned long elapsedMillis = now - cycleStartTime;
   

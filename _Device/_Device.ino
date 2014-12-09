@@ -4,13 +4,6 @@
 // INVISIBLE LIGHT FACTORY DEVICE FIRMWARE
 // v3.0.2
 //
-//  To use:
-//
-//  0) set the include paths below to the right thing
-//  1) configure the device type
-//  2) consider commenting out SERIAL_DEBUG
-//
-//
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,9 +12,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // #define DEVICE_BEEPER
-// #define DEVICE_LIGHTSTICK
+#define DEVICE_LIGHTSTICK
 // #define DEVICE_AUDIO
-#define DEVICE_HEADLIGHT
+// #define DEVICE_HEADLIGHT
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // CONSTANT CONFIGURATION
@@ -45,9 +38,9 @@
 #include "devices.h"
 #include <EEPROM.h>
 
-#include "/Absolute/path/to/VisionCommission/InvisibleWindFactory/shared/arraysize.h"
-#include "/Absolute/path/to/VisionCommission/InvisibleWindFactory/shared/readEEPROM.h"
-#include "/Absolute/path/to/VisionCommission/InvisibleWindFactory/shared/IWFSerialProtocol.h"
+#include "/absolute/path/to/VisionCommission/InvisibleWindFactory/shared/arraysize.h"
+#include "/absolute/path/to/VisionCommission/InvisibleWindFactory/shared/readEEPROM.h"
+#include "/absolute/path/to/VisionCommission/InvisibleWindFactory/shared/IWFSerialProtocol.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // GLOBALS
@@ -182,10 +175,10 @@ const Command COMMANDS[] = {
   {COMMAND_DELIMITER_BRIGHTNESS,         presetBrightness},
   {COMMAND_DELIMITER_HUE,                presetHue},
   {COMMAND_DELIMITER_SATURATION,         presetSaturation},
-  {COMMAND_DELIMITER_RUNTIME,            presetRuntime},
+  {COMMAND_DELIMITER_TEMPO,              presetTempo},
   {COMMAND_DELIMITER_SEGUE_DURATION,     presetSegue},
   {COMMAND_DELIMITER_ANIMATION_ROUTINE,  presetRoutine},
-  {COMMAND_DELIMITER_DITTO,  presetDitto},
+  {COMMAND_DELIMITER_DITTO,              presetDitto},
 };
 
 void presetDitto(String params) {
@@ -220,11 +213,11 @@ void presetSaturation(String params) {
   #endif
 };
 
-void presetRuntime(String params) {
-  int t = params.toInt();
-  tape.presetRuntime(t);
+void presetTempo(String params) {
+  int bpm = params.toInt();
+  tape.presetTempo(bpm);
   #ifdef SERIAL_DEBUG
-    debugPreset("tape runtime",t);
+    debugPreset("tape tempo",bpm);
   #endif
 };
 

@@ -25,7 +25,7 @@ class ServiceLEDTape : public Service {
     void presetSaturation(int s);
     void presetBrightness(int b);
     void presetAnimationType(int n);
-    void presetRuntime(int t); // ie animation loop time
+    void presetTempo(int bpm); // which will be comverted to milliseconds
     void presetSegueSeconds(int s); // for colour
 
   private:

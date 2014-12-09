@@ -23,7 +23,7 @@ void ServiceLEDTape::cue() {
   switch (animationType) {
     case 0:
       break;
-    case 1: 
+    case 1:
       break;
     case 2:
       run.setMax(NUM_LEDS);
@@ -62,7 +62,7 @@ void ServiceLEDTape::service(unsigned long elapsedMillis) {
   switch (animationType) {
     case 0: // nothing
       break;
-    case 1: 
+    case 1:
       doRoutineSolid(); // solid colour
       break;
     case 2:
@@ -78,7 +78,7 @@ void ServiceLEDTape::service(unsigned long elapsedMillis) {
 
   // display
   draw();
- 
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,8 +102,21 @@ void ServiceLEDTape::presetAnimationType(int n) {animationTypeQueued = n;}
 void ServiceLEDTape::presetHue(int h){hue.queuedValue = h;}
 void ServiceLEDTape::presetSaturation(int s){saturation.queuedValue = s;}
 void ServiceLEDTape::presetBrightness(int b){brightness.queuedValue = b;}
-void ServiceLEDTape::presetRuntime(int t){
-  run.queuedDuration = t;
+void ServiceLEDTape::presetTempo(int bpm){
+  // float numBars = bpm / 4.0f; //assuming four beats to the bar. number of complete cycles in 1 minute
+  float numBars = bpm * 1.0f;
+  unsigned long millisInAMinute = 60000;
+  float millisPerCycle = millisInAMinute / numBars;
+  int msDuration = round(millisPerCycle);
+/*
+  Serial.print("Bars: ");
+  Serial.println(numBars);
+  Serial.print("MPC: ");
+  Serial.println(millisPerCycle);
+  Serial.print("d: ");
+  Serial.println(msDuration);
+*/
+  run.queuedDuration = msDuration;
 }
 
 void ServiceLEDTape::presetSegueSeconds(int s) {
