@@ -12,8 +12,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // #define DEVICE_BEEPER
-#define DEVICE_LIGHTSTICK
-// #define DEVICE_AUDIO
+// #define DEVICE_LIGHTSTICK
+ #define DEVICE_AUDIO
 // #define DEVICE_HEADLIGHT
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +32,8 @@
 // INCLUDES
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <SoftwareSerial.h>
+#include <MP3Trigger.h>
 #include "Service.h"
 #include "Channel.h"
 #include <FastLED.h>
@@ -57,10 +59,18 @@ void setup() {
   delay(STARTUP_DELAY);
   setupRadio();
   setupUID();
-  killLED();
   for (int i = 0; i < nServices; i++) {
     services[i]->init();
   }
+
+  #ifdef DEVICE_AUDIO
+    trigger.setup(&trigSerial);
+    trigSerial.begin(MP3Trigger::serialRate());
+    audio.attachTrigger(&trigger);
+    audio.setTrack(2);
+  #else
+    killLED();
+  #endif
 }
 
 void loop() {
@@ -250,8 +260,35 @@ const Command COMMANDS[] = {
   {COMMAND_DELIMITER_ADDRESS,            parseAddressCommand},
   // CUEING
   {COMMAND_BANG,                         bangCommand},
-  {COMMAND_SOFTBANG,                     softBangCommand}
+  {COMMAND_SOFTBANG,                     softBangCommand},
+  {COMMAND_DELIMITER_AUDIO_TRACK,        presetAudioTrack},
+  {COMMAND_DELIMITER_AUDIO_STOP,         presetAudioStop},
+  {COMMAND_DELIMITER_AUDIO_VOLUME,       presetAudioVolume},
 };
+
+void presetAudioTrack(String params) {
+  int t = params.toInt();
+  audio.setTrack(t);
+  #ifdef SERIAL_DEBUG
+    debugPreset("a track",t);
+  #endif
+}
+
+void presetAudioStop(String params) {
+  // ignore params
+  audio.stopOnNextCue();
+  #ifdef SERIAL_DEBUG
+    debugPreset("a playing",0);
+  #endif
+}
+
+void presetAudioVolume(String params) {
+  int v = params.toInt();
+  audio.setVolume(v);
+  #ifdef SERIAL_DEBUG
+    debugPreset("a volume",v);
+  #endif
+}
 
 #endif
 

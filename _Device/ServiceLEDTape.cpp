@@ -107,6 +107,7 @@ void ServiceLEDTape::presetTempo(int bpm){
   float numBars = bpm * 1.0f;
   unsigned long millisInAMinute = 60000;
   float millisPerCycle = millisInAMinute / numBars;
+
   int msDuration = round(millisPerCycle);
 /*
   Serial.print("Bars: ");

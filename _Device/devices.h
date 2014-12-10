@@ -24,8 +24,10 @@
 		const String CONFIGURATION_NAME = "Audio";
 	#endif
 	#include "ServiceAudio.h"
-	ServiceAudio mp3;
-	Service* services[] = {&mp3};
+	ServiceAudio audio;
+	Service* services[] = {&audio};
+	SoftwareSerial trigSerial = SoftwareSerial(MP3_RX, MP3_TX);
+	MP3Trigger trigger;
 #endif
 
 #ifdef DEVICE_HEADLIGHT
