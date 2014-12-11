@@ -12,8 +12,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // #define DEVICE_BEEPER
-// #define DEVICE_LIGHTSTICK
- #define DEVICE_AUDIO
+ #define DEVICE_LIGHTSTICK
+// #define DEVICE_AUDIO
 // #define DEVICE_HEADLIGHT
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +50,7 @@
 
 int nServices = ARRAY_SIZE(services);
 unsigned long lastCueTime = millis();
+boolean respondToSoftCue = false;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // ARDUINO LIFECYCLE
@@ -358,6 +359,9 @@ void parseAddressCommand(String params) {
     }
     // if we've got here, the command was for us, so strip off the address and re-parse it for execution
     parseCommandString(params.substring(NUMBER_OF_ADDRESS_DIGITS));
+    respondToSoftCue = true; 
+    // POSSIBLE BUG: unaddressed commands won't be triggered by a soft cue (but they were by definition indiscriminate, so a hard bang is appropriate)
+    // also, it's possible that even though the address is right, no valid command has been received. in this case it seems right to cue anyway
   }
 };
 
@@ -394,13 +398,15 @@ void bangCommand(String params) {
 };
 
 void softBangCommand(String params) {
-  if (isNewBang(params)) {
-    // we got a bang - do the cue only if the cue is initialised
-    // ie if we haven't had any presets, just carry on
-    // TODO if (queuedState.isInitialised()) advanceStateMachine();
-#ifdef SERIAL_DEBUG
-    Serial.println("<soft bang>");
-#endif
+  if (respondToSoftCue) {
+    if (isNewBang(params)) {
+      // we got a bang - do the cue only if the cue is initialised
+      // ie if we haven't had any presets, just carry on
+      sendCue();
+  #ifdef SERIAL_DEBUG
+      Serial.println("<soft bang>");
+  #endif
+    }
   }
 };
 
@@ -409,6 +415,7 @@ void sendCue() {
   for (int i = 0; i < nServices; i++) {
     services[i]->cue();
   }
+  respondToSoftCue = false;
 }
 
 int cueNumberFromBang(String command) { // eg cueNumberFromBang("123");

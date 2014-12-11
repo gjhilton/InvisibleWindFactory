@@ -44,6 +44,7 @@ class ServiceLEDTape : public Service {
     CRGB getCurrentColour();
     void doRoutineSolid();
     void doRoutineSingle();
+    void doRoutineFlash();
 };
 
 #endif

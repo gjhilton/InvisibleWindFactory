@@ -28,7 +28,7 @@ class ServiceAudio : public Service {
         queuedVolume = byte(0);
       }
       // if none is true just keep doing what you were doing... :-)
-      playWhenCued = stopWhenCued = false = volumeWhenCued = false;
+      playWhenCued = stopWhenCued = volumeWhenCued = false;
     }
 
     void service(unsigned long elapsedMillis) {

@@ -23,7 +23,7 @@ void ServiceLEDTape::cue() {
   switch (animationType) {
     case 0:
       break;
-    case 1:
+    case 1: 
       break;
     case 2:
       run.setMax(NUM_LEDS);
@@ -36,6 +36,10 @@ void ServiceLEDTape::cue() {
     case 4:
       run.setMax(NUM_LEDS);
       run.setLoopMode(LOOP_MODE_CYLON);
+      break;
+    case 5:
+      run.setMax(255);
+      run.setLoopMode(LOOP_MODE_DESCENDING);
       break;
   }
     run.cue();
@@ -62,7 +66,7 @@ void ServiceLEDTape::service(unsigned long elapsedMillis) {
   switch (animationType) {
     case 0: // nothing
       break;
-    case 1:
+    case 1: 
       doRoutineSolid(); // solid colour
       break;
     case 2:
@@ -74,11 +78,14 @@ void ServiceLEDTape::service(unsigned long elapsedMillis) {
     case 4:
       doRoutineSingle(); // one travelling pixel cylon
       break;
+    case 5:
+      doRoutineFlash(); // whole thing flashes
+      break;
   }
 
   // display
   draw();
-
+ 
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +101,20 @@ void ServiceLEDTape::doRoutineSingle(){
   setAtAntiAliased(run.currentValue, hue.currentValue, saturation.currentValue, brightness.currentValue);
 }
 
+void ServiceLEDTape::doRoutineFlash(){
+  float b = brightness.currentValue * (run.currentValue / 255.0f); // scale brightness by point in current cycle
+  /*
+  if (b > 153) {
+    b = 255;
+  } else {
+    b=0;
+  }
+  */
+  CHSV colour = CHSV(hue.currentValue,saturation.currentValue,round(b));
+  CRGB c = CRGB(colour);
+  setAll(c);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // PRESETTERS
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,16 +128,7 @@ void ServiceLEDTape::presetTempo(int bpm){
   float numBars = bpm * 1.0f;
   unsigned long millisInAMinute = 60000;
   float millisPerCycle = millisInAMinute / numBars;
-
   int msDuration = round(millisPerCycle);
-/*
-  Serial.print("Bars: ");
-  Serial.println(numBars);
-  Serial.print("MPC: ");
-  Serial.println(millisPerCycle);
-  Serial.print("d: ");
-  Serial.println(msDuration);
-*/
   run.queuedDuration = msDuration;
 }
 
