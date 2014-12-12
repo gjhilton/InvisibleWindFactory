@@ -171,10 +171,15 @@ void ServiceLEDTape::setAtAntiAliased(float led, int h, int s, int b) {
   int highValue =  (led - lowIndex) * b;
   CHSV lowColour = CHSV(h, s, lowValue);
   CHSV highColour = CHSV(h, s, highValue);
+  /*
+  // wrap - desirable on circular led strips, not on striaght
   if (lowIndex < 0) lowIndex = NUM_LEDS - 1;
   if (highIndex >= NUM_LEDS) highIndex = 0;
   setAt(lowIndex, lowColour);
   setAt(highIndex, highColour);
+  */
+  if (lowIndex >= 0) setAt(lowIndex, lowColour);
+  if (highIndex < NUM_LEDS) setAt(highIndex, highColour);
 }
 
 void ServiceLEDTape::setAt(int led, CRGB colour) {
